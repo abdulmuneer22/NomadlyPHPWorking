@@ -1,2 +1,1 @@
-Sample LogLondonCOLD3000LondonCOLD3000\nLondonCOLD3000
-LondonCOLD3000---------\nLondonCOLD3000---------\nLondonCOLD3000OriginCity=>LondonClimate=>COLDBudget=>3000
+OriginCity=>BangaloreClimate=>ColdBudget=>1000---Other Filters -- Internet =>InternetSafety=>SafetyNightlife=>NightlifeRegion=>AfricaSurfing=>SurfingCity Type =>Small TownPeaceful=>PeacefulWifi=>Wifi
