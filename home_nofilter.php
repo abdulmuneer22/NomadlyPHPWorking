@@ -245,11 +245,13 @@ header('Content-type: application/json');
     );
 
     
-    for($i=0;$i<4;$i++){
+    for($i=0;$i<10;$i++){
         //echo intval($pricecalculated[$i]["Price"])."-------";
-        $price = intval($pricecalculated[$i]["Price"])." $";
+        $price = intval($pricecalculated[$i]["Price"]);
+        $cityname = $pricecalculated[$i]["CityName"];
+        if($cityname !=null && $price < intval($_GET["Budget"])){
 
-        $data["messages"][0]["attachment"]["payload"]["elements"][$i] = array(
+            $data["messages"][0]["attachment"]["payload"]["elements"][$i] = array(
                     "title" => $pricecalculated[$i]["CityName"],
                     "image_url" => $pricecalculated[$i]["nomadimageurl"],
                     "subtitle" => "A Great Place To Visit",
@@ -266,6 +268,8 @@ header('Content-type: application/json');
                             )
                         )
                     );
+        }
+        
     }
 
     echo json_encode($data);

@@ -1,1 +1,1 @@
-OriginCity=>BangaloreClimate=>ColdBudget=>1000---Other Filters -- Internet =>InternetSafety=>SafetyNightlife=>NightlifeRegion=>AfricaSurfing=>SurfingCity Type =>Small TownPeaceful=>PeacefulWifi=>Wifi
+OriginCity=>BangaloreClimate=>ColdBudget=>1000---Other Filters -- Internet =>InternetSafety=>SafetyNightlife=>NightlifeRegion=>AfricaSurfing=>SurfingCity Type =>Small TownPeaceful=>PeacefulWifi=>WifiOriginCity=>BangaloreClimate=>HOTBudget=>1000OriginCity=>BangaloreClimate=>HOTBudget=>500
