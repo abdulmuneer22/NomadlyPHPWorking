@@ -164,6 +164,13 @@ formatOutput($pricecalculated);
 
 
 
+function test(){
+    header('Content-type: application/json');
+    
+    $output = array("text"=>"Sample message");
+
+    echo json_encode($output);
+}
 
 
 
@@ -174,7 +181,7 @@ formatOutput($pricecalculated);
 
 
 
-
-init();
+//init();
+test();
 
 ?>
