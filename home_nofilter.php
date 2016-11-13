@@ -372,6 +372,7 @@ function test(){
 
 //test();
 $url = getUrlParams();
-init($url);
+
+//init($url);
 
 ?>
