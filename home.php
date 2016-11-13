@@ -168,8 +168,8 @@ function test(){
     header('Content-type: application/json');
     
     $output = array("messages" => array(
-        "CityName" => "Hello",
-        "Price" => "100 !!"
+        "text" => "Hello"
+        
     ));
 
     echo json_encode($output);
