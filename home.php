@@ -142,7 +142,7 @@ header('Content-type: application/json');
 //Final Output given here
 $output = array("text"=>"Sample message");
 
-echo json_encode($output);
+//echo json_encode($output);
 
  
 }
