@@ -136,6 +136,8 @@ function CalculatePrice($Budget,$PollingURLWithCityCodes){
 
 
 function formatOutput($pricecalculated){
+//print_r($pricecalculated[0]["nomadimageurl"]);
+//print_r($pricecalculated[0]);    
 header('Content-type: application/json');
     $data = array("messages" => array(
         array("text"=>"tesing"),
@@ -181,19 +183,19 @@ header('Content-type: application/json');
 
     for($i=0;$i<4;$i++){
         $data["messages"][0]["attachment"]["payload"]["elements"][$i] = array(
-                    "title" => "Some T-Shirt".$i,
-                    "image_url" => "http://petersapparel.parseapp.com/img/item100-thumb.png",
+                    "title" => $pricecalculated[$i]["CityName"],
+                    "image_url" => $pricecalculated[$i]["nomadimageurl"],
                     "subtitle" => "Soft white cotton t-shirt is back in style",
                     "buttons" => array(
                         array(
                             "type" => "web_url",
                             "url" => "https://petersapparel.parseapp.com/view_item?item_id=100",
-                            "title" => "View Item"
+                            "title" => $pricecalculated[$i]["Price"]
                         ),
                         array(
                             "type" => "web_url",
                             "url" => "https://petersapparel.parseapp.com/buy_item?item_id=100",
-                            "title" =>"Buy Item"
+                            "title" =>"Book Now"
                             )
                         )
                     );
