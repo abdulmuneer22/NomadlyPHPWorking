@@ -167,10 +167,7 @@ formatOutput($pricecalculated);
 function test(){
     header('Content-type: application/json');
     
-    $output = array("messages" => array(
-        "text" => "Hello"
-        
-    ));
+    $output = array("text" => "Hello");
 
     echo json_encode($output);
 }
