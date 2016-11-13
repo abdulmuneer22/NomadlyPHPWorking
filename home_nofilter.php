@@ -3,14 +3,66 @@ header('Content-type: application/json');
 require_once 'unirest-php/src/Unirest.php';
 #Get Data From Nomadlist
 
-function filterNomadlist(){
+function getUrlParams(){
     //filter nomadlist ; given to getCityListFromNomadList
+    //expected url = http://104.131.188.15/api/home_nofilter.php?OriginCity=Bangalore&Climate=Cold&Budget=1000
+    $OriginCity = $_GET['OriginCity'];
+    $Climate = $_GET['Climate'];
+    $Budget = $_GET['Budget'];
+    $url = null;
+    //echo $OriginCity.$Climate;
+    $filtercount = 0;
+    $baseurl = "https://nomadlist.com/api/v2/filter/city?c=";
+    $tail = "&s=nomad_score&o=desc";
+
+    //echo $Climate;
+    switch($Climate){
+    case 'COLD':
+    $filtercount = $filtercount + 1;
+    //echo $filtercount;
+    $temperateFilter = "&f".$filtercount."_target=temperatureC&f".$filtercount."_type=lt&f".$filtercount."_max=20";
+    //echo($baseurl.$filtercount.$temperateFilter);
+    $url = $baseurl.$filtercount.$temperateFilter;
+    break;
+
+    case 'HOT':
+    $filtercount = $filtercount + 1;
+    //echo $filtercount;    
+    $temperateFilter = "&f".$filtercount."_target=temperatureC&f".$filtercount."_type=gt&f".$filtercount."_min=30";
+    //echo($baseurl.$filtercount.$temperateFilter.$tail);
+    $url = $baseurl.$filtercount.$temperateFilter.$tail;
+    break;
+
+    case 'MILD':
+    $filtercount = $filtercount + 1;
+    //echo $filtercount;    
+    $temperateFilter = "&f".$filtercount."_target=temperatureC&f".$filtercount."_type=bt&f".$filtercount."_min=16&f".$filtercount."_max=25";
+    //echo($baseurl.$filtercount.$temperateFilter.$tail);
+    $url = $baseurl.$filtercount.$temperateFilter.$tail;
+    break;
+
+    case 'WARM':
+    $filtercount = $filtercount + 1;
+    //echo $filtercount;    
+    $temperateFilter = "&f".$filtercount."_target=temperatureC&f".$filtercount."_type=gt&f".$filtercount."_min=21";
+    //echo($baseurl.$filtercount.$temperateFilter.$tail);
+    $url = $baseurl.$filtercount.$temperateFilter.$tail;
+    break;
+    
+    }
+
+
+    //echo $url.$Budget;
+    return $url;
+
+    //APPLY Next Filter ? Budget => Pass to next function call
+
 }
 
 
-function getCityListFromNomadList(){
+function getCityListFromNomadList($url){
 $headers = array('Accept' => 'application/json');
-$response = Unirest\Request::post('https://nomadlist.com/api/v2/filter/city?c=1&f1_target=temperatureC&f1_type=lt&f1_max=20&s=nomad_score&o=desc', $headers);
+$response = Unirest\Request::post($url, $headers);
 // return first 15 results
 $nomadlist = array ();
 for ($i=0;$i < 5 ;$i++){
@@ -187,15 +239,18 @@ header('Content-type: application/json');
     );
 
     for($i=0;$i<4;$i++){
+        //echo intval($pricecalculated[$i]["Price"])."-------";
+        $price = intval($pricecalculated[$i]["Price"])." $";
+
         $data["messages"][0]["attachment"]["payload"]["elements"][$i] = array(
                     "title" => $pricecalculated[$i]["CityName"],
                     "image_url" => $pricecalculated[$i]["nomadimageurl"],
-                    "subtitle" => "Soft white cotton t-shirt is back in style",
+                    "subtitle" => "A Great Place To Visit",
                     "buttons" => array(
                         array(
                             "type" => "web_url",
                             "url" => "https://petersapparel.parseapp.com/view_item?item_id=100",
-                            "title" => $pricecalculated[$i]["Price"]
+                            "title" => $price
                         ),
                         array(
                             "type" => "web_url",
@@ -209,19 +264,29 @@ header('Content-type: application/json');
     echo json_encode($data);
 }
 
-function init(){
+function init($url){
 
-$nomadlist = getCityListFromNomadList();
+$nomadlist = getCityListFromNomadList($url);
 
 $skycode = getSKYCODE($nomadlist);
 
-$PollingURLWithCityCodes = setPollingURL($skycode,"Lond-sky");
+//get Skycode for Origin City
+//echo $_GET['OriginCity'];
+$OriginCity = getSKYCODE($_GET['OriginCity']);
+//print_r($OriginCity[0]["CityCode"]);
+$OriginCity = $OriginCity[0]["CityCode"];
 
-$pricecalculated = CalculatePrice("900",$PollingURLWithCityCodes);
+$PollingURLWithCityCodes = setPollingURL($skycode,$OriginCity);
+//print_r($PollingURLWithCityCodes);
+
+
+$Budget = $_GET['Budget'];
+$pricecalculated = CalculatePrice($Budget,$PollingURLWithCityCodes);
+//print_r($pricecalculated);
 
 formatOutput($pricecalculated);
 
-//echo json_encode($PollingURLWithCityCodes);
+
 }
 
 
@@ -290,7 +355,7 @@ function test(){
                     );
     }
 
-    echo json_encode($data);
+    //echo json_encode($data);
     
 }
 
@@ -303,7 +368,9 @@ function test(){
 
 
 
-init();
+
 //test();
+$url = getUrlParams();
+init($url);
 
 ?>

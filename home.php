@@ -3,6 +3,11 @@ header('Content-type: application/json');
 require_once 'unirest-php/src/Unirest.php';
 #Get Data From Nomadlist
 
+function filterNomadlist(){
+    //filter nomadlist ; given to getCityListFromNomadList
+}
+
+
 function getCityListFromNomadList(){
 $headers = array('Accept' => 'application/json');
 $response = Unirest\Request::post('https://nomadlist.com/api/v2/filter/city?c=1&f1_target=temperatureC&f1_type=lt&f1_max=20&s=nomad_score&o=desc', $headers);
