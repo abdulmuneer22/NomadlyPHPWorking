@@ -136,15 +136,16 @@ function CalculatePrice($Budget,$PollingURLWithCityCodes){
 
 
 function formatOutput($pricecalculated){
-//print_r($pricecalculated);
 header('Content-type: application/json');
 
-//Final Output given here
-$output = array("text"=>"Sample message");
+$data = array("messages" => array(
+        array("text"=>"tesing"),
+        array("text"=>"testing again"),
+        
+));
 
-//echo json_encode($output);
 
- 
+ echo json_encode($data);
 }
 
 function init(){
@@ -167,9 +168,7 @@ formatOutput($pricecalculated);
 function test(){
     header('Content-type: application/json');
     
-    $output = array("text" => "Hello");
-
-    echo json_encode($output);
+    
 }
 
 
@@ -181,7 +180,7 @@ function test(){
 
 
 
-//init();
-test();
+init();
+//test();
 
 ?>
