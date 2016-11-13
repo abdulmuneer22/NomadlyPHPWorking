@@ -2,7 +2,7 @@
 header('Content-type: application/json');
 require_once 'unirest-php/src/Unirest.php';
 #Get Data From Nomadlist
-
+//http://104.131.188.15/api/home_nofilter.php?OriginCity={{Origin}}&Climate={{cityClimate}}&Budget={{maxBudget}}
 function getUrlParams(){
     //filter nomadlist ; given to getCityListFromNomadList
     //expected url = http://104.131.188.15/api/home_nofilter.php?OriginCity=Bangalore&Climate=Cold&Budget=1000
@@ -10,7 +10,7 @@ function getUrlParams(){
     $Climate = $_GET['Climate'];
     $Budget = $_GET['Budget'];
     $url = null;
-    //echo $OriginCity.$Climate;
+    echo $OriginCity.$Climate.$Budget;
     $filtercount = 0;
     $baseurl = "https://nomadlist.com/api/v2/filter/city?c=";
     $tail = "&s=nomad_score&o=desc";
@@ -238,6 +238,7 @@ header('Content-type: application/json');
         )
     );
 
+    
     for($i=0;$i<4;$i++){
         //echo intval($pricecalculated[$i]["Price"])."-------";
         $price = intval($pricecalculated[$i]["Price"])." $";
