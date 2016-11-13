@@ -1,0 +1,2 @@
+Sample LogLondonCOLD3000LondonCOLD3000\nLondonCOLD3000
+LondonCOLD3000---------\nLondonCOLD3000---------\nLondonCOLD3000OriginCity=>LondonClimate=>COLDBudget=>3000

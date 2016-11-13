@@ -10,7 +10,13 @@ function getUrlParams(){
     $Climate = $_GET['Climate'];
     $Budget = $_GET['Budget'];
     $url = null;
-    echo $OriginCity.$Climate.$Budget;
+    //return $OriginCity.$Climate.$Budget;
+    $file = 'logs.txt';
+    $current = file_get_contents($file);
+    $current .= "OriginCity=>".$OriginCity."Climate=>".$Climate."Budget=>".$Budget;
+    file_put_contents($file,$current);
+    $current .= "\n";
+
     $filtercount = 0;
     $baseurl = "https://nomadlist.com/api/v2/filter/city?c=";
     $tail = "&s=nomad_score&o=desc";
@@ -373,6 +379,7 @@ function test(){
 //test();
 $url = getUrlParams();
 
-//init($url);
+
+init($url);
 
 ?>
