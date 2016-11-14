@@ -130,7 +130,7 @@ for($i=0 ; $i < sizeof($skycode) ; $i++){
     'outbounddate' => '2016-11-15',
     'adults' => '1'
     );
-
+ 
     $body = Unirest\Request\Body::form($data);
     $response = Unirest\Request::post($PollingURLSkyEndPoint, $headers, $body);
     $polling = array(
@@ -168,14 +168,18 @@ function CalculatePrice($Budget,$PollingURLWithCityCodes){
         $pollurl = $pollurl.$apikey;
         //print_r($pollurl);
         //print_r($PollingURLWithCityCodes[$i]["nomadimageurl"]);
-
+        $DeeplinkUrl = $response->body->Itineraries[0]->PricingOptions[0]->DeeplinkUrl;
 
         $response = Unirest\Request::get($pollurl);
         //print_r($response->body->Itineraries[0]->PricingOptions[0]->Price);
         $price = $response->body->Itineraries[0]->PricingOptions[0]->Price;
         $cityname = $PollingURLWithCityCodes[$i]["DestinationName"];
         
-        $response = array('CityName' => $cityname , "Price" => $price ,"nomadimageurl" => $PollingURLWithCityCodes[$i]["nomadimageurl"] );
+        $response = array(
+            'CityName' => $cityname , 
+            "Price" => $price ,
+            "DeeplinkUrl" => $DeeplinkUrl,
+            "nomadimageurl" => $PollingURLWithCityCodes[$i]["nomadimageurl"] );
 
         if($price < $Budget){
             array_push($calculatedprice,$response);
@@ -259,12 +263,12 @@ header('Content-type: application/json');
                     "buttons" => array(
                         array(
                             "type" => "web_url",
-                            "url" => "https://petersapparel.parseapp.com/view_item?item_id=100",
+                            "url" => $pricecalculated[$i]["DeeplinkUrl"],
                             "title" => $price
                         ),
                         array(
                             "type" => "web_url",
-                            "url" => "https://petersapparel.parseapp.com/buy_item?item_id=100",
+                            "url" => $pricecalculated[$i]["DeeplinkUrl"],
                             "title" =>"Book Now"
                             )
                         )
