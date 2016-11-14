@@ -210,37 +210,14 @@ function getCityListFromNomadList($url){
 $headers = array('Accept' => 'application/json');
 $response = Unirest\Request::post($url, $headers);
 // return first 15 results
-
-
-
-if(sizeof($response->body->slugs) > 15){
-    $limit = 15;
-}else{
-    $limit = sizeof($response->body->slugs);
-}
-
 $nomadlist = array ();
-
-for ($i=0;$i < $limit ;$i++){
+for ($i=0;$i < 5 ;$i++){
 
     array_push($nomadlist,$response->body->slugs[$i]);
 }
 
-if(sizeof($response->body->slugs) < 1){
-    header('Content-type: application/json');
-    $data = array("messages"=>array(
-        array("text"=>"Sorry Could Not Find What You Are Looking For"),
-        array("text"=>"Please Try Again !")
-        )
-    );
-
-    echo json_encode($data);
-}else{
-    return $nomadlist;
-}
-
-
-//return $nomadlist;
+//print_r($nomadlist);
+return $nomadlist;
 
 }
 
@@ -268,7 +245,7 @@ function getSKYCODE($nomadlist){
          
     }
 
-    //print_r($skycode);
+    
     return $skycode;
 }
 
@@ -292,7 +269,7 @@ for($i=0 ; $i < sizeof($skycode) ; $i++){
     'outbounddate' => '2016-11-15',
     'adults' => '1'
     );
-
+ 
     $body = Unirest\Request\Body::form($data);
     $response = Unirest\Request::post($PollingURLSkyEndPoint, $headers, $body);
     $polling = array(
@@ -320,22 +297,20 @@ return $PollingURLWithCityCodes;
 function CalculatePrice($Budget,$PollingURLWithCityCodes){
     
     $apikey = "?apiKey=prtl6749387986743898559646983194";
-    //$pollurl = "http://partners.api.skyscanner.net/apiservices/pricing/sg1/v1.0/bac9941a62dd48ac9b7d2d8a52998bbc_ecilpojl_EC1A4DBFD317BAC81DA0762C925A9B0A";
-    //$pollurl = $pollurl.$apikey;
-    //print_r($Budget);
+    $pollurl = "http://partners.api.skyscanner.net/apiservices/pricing/sg1/v1.0/bac9941a62dd48ac9b7d2d8a52998bbc_ecilpojl_EC1A4DBFD317BAC81DA0762C925A9B0A";
+    $pollurl = $pollurl.$apikey;
+    
     $totalpushed = 0;
     $calculatedprice = array();
-    $limit = sizeof($PollingURLWithCityCodes);
-    //$limit = 2;
-    for ($i=0;$i< $limit ;$i++){
+    for ($i=0;$i<sizeof($PollingURLWithCityCodes);$i++){
         $pollurl = $PollingURLWithCityCodes[$i]["PollingURL"]; 
         $pollurl = $pollurl.$apikey;
-        //print_r($pollurl);
-        //print_r($PollingURLWithCityCodes[$i]["nomadimageurl"]);
-
+        
+        
 
         $response = Unirest\Request::get($pollurl);
-        $DeeplinkUrl = $response->body->Itineraries[0]->PricingOptions[0]->DeeplinkUrl;
+        
+        $DeeplinkUrl = $response->body->Itineraries[0]->PricingOptions[$i]->DeeplinkUrl;
         $price = $response->body->Itineraries[0]->PricingOptions[0]->Price;
         $cityname = $PollingURLWithCityCodes[$i]["DestinationName"];
         
@@ -414,27 +389,36 @@ header('Content-type: application/json');
     );
 
     
-    for($i=0;$i<4;$i++){
+    for($i=0;$i<10;$i++){
         //echo intval($pricecalculated[$i]["Price"])."-------";
-        $price = intval($pricecalculated[$i]["Price"])." $";
-
-        $data["messages"][0]["attachment"]["payload"]["elements"][$i] = array(
+        $price = intval($pricecalculated[$i]["Price"]);
+        $cityname = $pricecalculated[$i]["CityName"];
+        if($cityname !=null && $price < intval($_GET["Budget"])){
+            if($pricecalculated[$i]["DeeplinkUrl"] != null){
+                $DeeplinkUrl = $pricecalculated[$i]["DeeplinkUrl"] ;
+            }else {
+                $DeeplinkUrl =  "https://skyscanner.com";
+            }
+            
+            $data["messages"][0]["attachment"]["payload"]["elements"][$i] = array(
                     "title" => $pricecalculated[$i]["CityName"],
                     "image_url" => $pricecalculated[$i]["nomadimageurl"],
                     "subtitle" => "A Great Place To Visit",
                     "buttons" => array(
                         array(
                             "type" => "web_url",
-                            "url" => $pricecalculated[$i]["DeeplinkUrl"],
+                            "url" => $DeeplinkUrl,
                             "title" => $price
                         ),
                         array(
                             "type" => "web_url",
-                            "url" => $pricecalculated[$i]["DeeplinkUrl"],
+                            "url" => $DeeplinkUrl,
                             "title" =>"Book Now"
                             )
                         )
                     );
+        }
+        
     }
 
     echo json_encode($data);
@@ -511,7 +495,7 @@ function test(){
         )
     );
 
-    for($i=0;$i<10;$i++){
+    for($i=0;$i<4;$i++){
         $data["messages"][0]["attachment"]["payload"]["elements"][$i] = array(
                     "title" => "Some T-Shirt".$i,
                     "image_url" => "http://petersapparel.parseapp.com/img/item100-thumb.png",
@@ -531,7 +515,7 @@ function test(){
                     );
     }
 
-    echo json_encode($data);
+    //echo json_encode($data);
     
 }
 
@@ -547,6 +531,8 @@ function test(){
 
 //test();
 $url = getUrlParams();
+
+
 init($url);
 
 ?>
