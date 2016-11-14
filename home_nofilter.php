@@ -168,10 +168,11 @@ function CalculatePrice($Budget,$PollingURLWithCityCodes){
         $pollurl = $pollurl.$apikey;
         //print_r($pollurl);
         //print_r($PollingURLWithCityCodes[$i]["nomadimageurl"]);
-        $DeeplinkUrl = $response->body->Itineraries[0]->PricingOptions[0]->DeeplinkUrl;
+        
 
         $response = Unirest\Request::get($pollurl);
-        //print_r($response->body->Itineraries[0]->PricingOptions[0]->Price);
+        //print_r($response->body->Itineraries[0]->PricingOptions[$i]->DeeplinkUrl);
+        $DeeplinkUrl = $response->body->Itineraries[0]->PricingOptions[$i]->DeeplinkUrl;
         $price = $response->body->Itineraries[0]->PricingOptions[0]->Price;
         $cityname = $PollingURLWithCityCodes[$i]["DestinationName"];
         
