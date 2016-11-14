@@ -19,7 +19,7 @@ function getUrlParams(){
     $Nightlife = $_GET['Nightlife'];
     $Region = $_GET['Region'];
     $Surfing = $_GET['Surfing'];
-    $CityType = $_GET['CityType'];
+    //$CityType = $_GET['CityType'];
     $Peaceful = $_GET['Peaceful'];
     $Wifi = $_GET['Wifi'];
     
@@ -30,9 +30,8 @@ function getUrlParams(){
     //return $OriginCity.$Climate.$Budget;
     $file = 'logs.txt';
     $current = file_get_contents($file);
-    $current .= "OriginCity=>".$OriginCity."Climate=>".$Climate."Budget=>".$Budget."---Other Filters -- "."Internet =>" .$Internet."Safety=>".$Safety."Nightlife=>".$Nightlife."Region=>".$Region."Surfing=>".$Surfing."City Type =>".$CityType."Peaceful=>".$Peaceful."Wifi=>".$Wifi
-    
-     ;
+    $current .= "OriginCity=>".$OriginCity."Climate=>".$Climate."Budget=>".$Budget."---Other Filters -- "."Internet =>" .$Internet."Safety=>".$Safety."Nightlife=>".$Nightlife."Region=>".$Region."Surfing=>".$Surfing."City Type =>".$CityType."Peaceful=>".$Peaceful."Wifi=>".$Wifi;
+
     file_put_contents($file,$current);
     $current .= "\n";
 
@@ -77,8 +76,140 @@ function getUrlParams(){
     }
 
 
-    //echo $url.$Budget;
+    //Get Other filters
+    //Internet
+    $Internet = $_GET['Internet'];
+    if($Internet == "internet"){
+        $filtercount = $filtercount + 1;
+        $InternetFilter = "&f".$filtercount."_target=internet_speed&f".$filtercount."_type=gt&f".$filtercount."_min=15";
+        $url = $baseurl.$filtercount.$temperateFilter.$InternetFilter.$tail;
+    
+    }else{
+        $InternetFilter = "";
+        $url = $baseurl.$filtercount.$temperateFilter.$InternetFilter.$tail;
+        
+
+    }
+
+
+    //Safety
+    $Safety = $_GET["Safety"];
+    if($Safety == "Safety"){
+        $filtercount = $filtercount + 1;
+        $Safetyfilter = "&f".$filtercount."_target=safety_level&f".$filtercount."_type=gt&f".$filtercount."_min=3";
+        $url = $baseurl.$filtercount.$temperateFilter.$InternetFilter.$Safetyfilter.$tail;
+    
+    }else{
+        $Safetyfilter = "";
+        $url = $baseurl.$filtercount.$temperateFilter.$InternetFilter.$Safetyfilter.$tail;
+        
+
+    }
+
+    //Nightlife
+    $Nightlife = $_GET["Nightlife"];
+    if($Nightlife == "Nightlife"){
+        $filtercount = $filtercount + 1;
+        $Nightlifefilter = "&f".$filtercount."_target=nightlife&f".$filtercount."_type=gt&f".$filtercount."_min=3";
+        $url = $baseurl.$filtercount.$temperateFilter.$InternetFilter.$Safetyfilter.$Nightlifefilter.$tail;
+    
+    }else{
+        $Nightlifefilter = "";
+        $url = $baseurl.$filtercount.$temperateFilter.$InternetFilter.$Safetyfilter.$Nightlifefilter.$tail;
+        
+
+    }
+
+    //Region
+    //$Region = $_GET["Region"];
+    switch($_GET["Region"]){
+        case 'Africa':
+        $filtercount = $filtercount + 1;
+        $Regionfilter = "&f".$filtercount."_target=region&f".$filtercount."_type=em&f".$filtercount."_value=Africa";
+        $url = $baseurl.$filtercount.$temperateFilter.$InternetFilter.$Safetyfilter.$Nightlifefilter.$Regionfilter.$tail;
+        break;
+
+        case 'Asia':
+        $filtercount = $filtercount + 1;
+        $Regionfilter = "&f".$filtercount."_target=region&f".$filtercount."_type=em&f".$filtercount."_value=Asia";
+        $url = $baseurl.$filtercount.$temperateFilter.$InternetFilter.$Safetyfilter.$Nightlifefilter.$Regionfilter.$tail;
+        break;
+
+        case 'Europe':
+        $filtercount = $filtercount + 1;
+        $Regionfilter = "&f".$filtercount."_target=region&f".$filtercount."_type=em&f".$filtercount."_value=Europe";
+        $url = $baseurl.$filtercount.$temperateFilter.$InternetFilter.$Safetyfilter.$Nightlifefilter.$Regionfilter.$tail;
+        break;
+
+        case 'Middle+East':
+        $filtercount = $filtercount + 1;
+        $Regionfilter = "&f".$filtercount."_target=region&f".$filtercount."_type=em&f".$filtercount."_value=Middle+East";
+        $url = $baseurl.$filtercount.$temperateFilter.$InternetFilter.$Safetyfilter.$Nightlifefilter.$Regionfilter.$tail;
+        break;
+
+        case 'North+America':
+        $filtercount = $filtercount + 1;
+        $Regionfilter = "&f".$filtercount."_target=region&f".$filtercount."_type=em&f".$filtercount."_value=North+America";
+        $url = $baseurl.$filtercount.$temperateFilter.$InternetFilter.$Safetyfilter.$Nightlifefilter.$Regionfilter.$tail;
+        break;
+
+        default:
+        $Regionfilter = "";
+        $url = $baseurl.$filtercount.$temperateFilter.$InternetFilter.$Safetyfilter.$Nightlifefilter.$Regionfilter.$tail;
+    }
+    
+
+    //Surfing
+
+    $Surfing = $_GET["Surfing"];
+    
+    if($Surfing == "Surfing"){
+        $filtercount = $filtercount + 1;
+        $SurfingFilter = "&f".$filtercount."_target=tags&f".$filtercount."_type=pm&f".$filtercount."_value=surfing";
+        $url = $baseurl.$filtercount.$temperateFilter.$InternetFilter.$Safetyfilter.$Nightlifefilter.$Regionfilter.$SurfingFilter.$tail;
+    
+    }else{
+        $SurfingFilter = "";
+        $url = $baseurl.$filtercount.$temperateFilter.$InternetFilter.$Safetyfilter.$Nightlifefilter.$Regionfilter.$SurfingFilter.$tail;
+        
+
+    }
+
+    $Peaceful = $_GET["Peaceful"];
+
+    if($Peaceful == "Peaceful"){
+        $filtercount = $filtercount + 1;
+        $PeacefulFilter = "&f".$filtercount."_target=fragile_states_index&f".$filtercount."_type=lt&f".$filtercount."_max=60";
+        $url = $baseurl.$filtercount.$temperateFilter.$InternetFilter.$Safetyfilter.$Nightlifefilter.$Regionfilter.$SurfingFilter.$PeacefulFilter.$tail;
+    
+    }else{
+        $PeacefulFilter = "";
+        $url = $baseurl.$filtercount.$temperateFilter.$InternetFilter.$Safetyfilter.$Nightlifefilter.$Regionfilter.$SurfingFilter.$PeacefulFilter.$tail;
+        
+
+    }
+    
+    
+
+    //Wifi
+    $Wifi = $_GET["Wifi"];
+
+    if($Wifi == "Wifi"){
+        $filtercount = $filtercount + 1;
+        $WifiFilter = "&f".$filtercount."_target=wifi_availability&f".$filtercount."_type=gt&f1_min=3";
+        $url = $baseurl.$filtercount.$temperateFilter.$InternetFilter.$Safetyfilter.$Nightlifefilter.$Regionfilter.$SurfingFilter.$PeacefulFilter.$WifiFilter.$tail;
+    
+    }else{
+        $WifiFilter = "";
+        $url = $baseurl.$filtercount.$temperateFilter.$InternetFilter.$Safetyfilter.$Nightlifefilter.$Regionfilter.$SurfingFilter.$PeacefulFilter.$WifiFilter.$tail;
+        
+
+    }
+
+    //echo $Region;
+    //echo $url;
     return $url;
+    //url for chatfuel => http://localhost/server/home_filters.php?OriginCity=Bangalore&Climate=COLD&Budget=1000&Internet=skip&Safety=Safety&Nightlife=skip&Region=Europe&Surfing=skip&Peaceful=Peaceful&Wifi=skip
 
     //APPLY Next Filter ? Budget => Pass to next function call
 
@@ -89,14 +220,37 @@ function getCityListFromNomadList($url){
 $headers = array('Accept' => 'application/json');
 $response = Unirest\Request::post($url, $headers);
 // return first 15 results
+
+
+
+if(sizeof($response->body->slugs) > 15){
+    $limit = 15;
+}else{
+    $limit = sizeof($response->body->slugs);
+}
+
 $nomadlist = array ();
-for ($i=0;$i < 5 ;$i++){
+
+for ($i=0;$i < $limit ;$i++){
 
     array_push($nomadlist,$response->body->slugs[$i]);
 }
 
-//print_r($nomadlist);
-return $nomadlist;
+if(sizeof($response->body->slugs) < 1){
+    header('Content-type: application/json');
+    $data = array("messages"=>array(
+        array("text"=>"Sorry Could Not Find What You Are Looking For"),
+        array("text"=>"Please Try Again !")
+        )
+    );
+
+    echo json_encode($data);
+}else{
+    return $nomadlist;
+}
+
+
+//return $nomadlist;
 
 }
 
@@ -176,12 +330,14 @@ return $PollingURLWithCityCodes;
 function CalculatePrice($Budget,$PollingURLWithCityCodes){
     
     $apikey = "?apiKey=prtl6749387986743898559646983194";
-    $pollurl = "http://partners.api.skyscanner.net/apiservices/pricing/sg1/v1.0/bac9941a62dd48ac9b7d2d8a52998bbc_ecilpojl_EC1A4DBFD317BAC81DA0762C925A9B0A";
-    $pollurl = $pollurl.$apikey;
+    //$pollurl = "http://partners.api.skyscanner.net/apiservices/pricing/sg1/v1.0/bac9941a62dd48ac9b7d2d8a52998bbc_ecilpojl_EC1A4DBFD317BAC81DA0762C925A9B0A";
+    //$pollurl = $pollurl.$apikey;
     //print_r($Budget);
     $totalpushed = 0;
     $calculatedprice = array();
-    for ($i=0;$i<sizeof($PollingURLWithCityCodes);$i++){
+    $limit = sizeof($PollingURLWithCityCodes);
+    //$limit = 2;
+    for ($i=0;$i< $limit ;$i++){
         $pollurl = $PollingURLWithCityCodes[$i]["PollingURL"]; 
         $pollurl = $pollurl.$apikey;
         //print_r($pollurl);
@@ -189,11 +345,15 @@ function CalculatePrice($Budget,$PollingURLWithCityCodes){
 
 
         $response = Unirest\Request::get($pollurl);
-        //print_r($response->body->Itineraries[0]->PricingOptions[0]->Price);
+        $DeeplinkUrl = $response->body->Itineraries[0]->PricingOptions[0]->DeeplinkUrl;
         $price = $response->body->Itineraries[0]->PricingOptions[0]->Price;
         $cityname = $PollingURLWithCityCodes[$i]["DestinationName"];
         
-        $response = array('CityName' => $cityname , "Price" => $price ,"nomadimageurl" => $PollingURLWithCityCodes[$i]["nomadimageurl"] );
+        $response = array(
+            'CityName' => $cityname , 
+            "Price" => $price ,
+            "DeeplinkUrl" => $DeeplinkUrl,
+            "nomadimageurl" => $PollingURLWithCityCodes[$i]["nomadimageurl"] );
 
         if($price < $Budget){
             array_push($calculatedprice,$response);
@@ -275,12 +435,12 @@ header('Content-type: application/json');
                     "buttons" => array(
                         array(
                             "type" => "web_url",
-                            "url" => "https://petersapparel.parseapp.com/view_item?item_id=100",
+                            "url" => $pricecalculated[$i]["DeeplinkUrl"],
                             "title" => $price
                         ),
                         array(
                             "type" => "web_url",
-                            "url" => "https://petersapparel.parseapp.com/buy_item?item_id=100",
+                            "url" => $pricecalculated[$i]["DeeplinkUrl"],
                             "title" =>"Book Now"
                             )
                         )
@@ -361,7 +521,7 @@ function test(){
         )
     );
 
-    for($i=0;$i<4;$i++){
+    for($i=0;$i<10;$i++){
         $data["messages"][0]["attachment"]["payload"]["elements"][$i] = array(
                     "title" => "Some T-Shirt".$i,
                     "image_url" => "http://petersapparel.parseapp.com/img/item100-thumb.png",
@@ -381,7 +541,7 @@ function test(){
                     );
     }
 
-    //echo json_encode($data);
+    echo json_encode($data);
     
 }
 
@@ -397,8 +557,6 @@ function test(){
 
 //test();
 $url = getUrlParams();
-print_r($url);
-
-//init($url);
+init($url);
 
 ?>

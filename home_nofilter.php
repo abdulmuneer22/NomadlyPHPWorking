@@ -60,6 +60,7 @@ function getUrlParams(){
 
     //echo $url.$Budget;
     return $url;
+    print_r($url);
 
     //APPLY Next Filter ? Budget => Pass to next function call
 
