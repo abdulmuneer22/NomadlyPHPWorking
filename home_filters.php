@@ -5,11 +5,7 @@ require_once 'unirest-php/src/Unirest.php';
 //http://104.131.188.15/api/home_nofilter.php?OriginCity={{Origin}}&Climate={{cityClimate}}&Budget={{maxBudget}}
 function getUrlParams(){
     //filter nomadlist ; given to getCityListFromNomadList
-    //expected url = http://104.131.188.15/api/home_nofilter.php?OriginCity=Bangalore&Climate=Cold&Budget=1000&Internet=Internet&Safety=Safety&Nightlife=Nightlife&Region=Afric&Surfin=Surfing&CityType=Small+Town&Peaceful=Peaceful&Wifi=Wifi
-    //OriginCity=Bangalore&Climate=Cold
-    //&Budget=1000
-    //&Internet=Internet&Safety=Safety&Nightlife=Nightlife&Region=Afric
-    //&Surfing=Surfing&CityType=Small+Town&Peaceful=Peaceful&Wifi=Wifi
+    
     $OriginCity = $_GET['OriginCity'];
     $Climate = $_GET['Climate'];
     $Budget = $_GET['Budget'];
@@ -28,13 +24,7 @@ function getUrlParams(){
 
     $url = null;
     //return $OriginCity.$Climate.$Budget;
-    $file = 'logs.txt';
-    $current = file_get_contents($file);
-    $current .= "OriginCity=>".$OriginCity."Climate=>".$Climate."Budget=>".$Budget."---Other Filters -- "."Internet =>" .$Internet."Safety=>".$Safety."Nightlife=>".$Nightlife."Region=>".$Region."Surfing=>".$Surfing."City Type =>".$CityType."Peaceful=>".$Peaceful."Wifi=>".$Wifi;
-
-    file_put_contents($file,$current);
-    $current .= "\n";
-
+    
     $filtercount = 0;
     $baseurl = "https://nomadlist.com/api/v2/filter/city?c=";
     $tail = "&s=nomad_score&o=desc";
@@ -209,7 +199,7 @@ function getUrlParams(){
     //echo $Region;
     //echo $url;
     return $url;
-    //url for chatfuel => http://localhost/server/home_filters.php?OriginCity=Bangalore&Climate=COLD&Budget=1000&Internet=skip&Safety=Safety&Nightlife=skip&Region=Europe&Surfing=skip&Peaceful=Peaceful&Wifi=skip
+    //url for chatfuel => http://localhost/server/cd
 
     //APPLY Next Filter ? Budget => Pass to next function call
 
