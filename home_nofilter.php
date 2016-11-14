@@ -11,11 +11,7 @@ function getUrlParams(){
     $Budget = $_GET['Budget'];
     $url = null;
     //return $OriginCity.$Climate.$Budget;
-    $file = 'logs.txt';
-    $current = file_get_contents($file);
-    $current .= "OriginCity=>".$OriginCity."Climate=>".$Climate."Budget=>".$Budget;
-    file_put_contents($file,$current);
-    $current .= "\n";
+    
 
     $filtercount = 0;
     $baseurl = "https://nomadlist.com/api/v2/filter/city?c=";
@@ -60,7 +56,7 @@ function getUrlParams(){
 
     //echo $url.$Budget;
     return $url;
-    print_r($url);
+    //print_r($url);
 
     //APPLY Next Filter ? Budget => Pass to next function call
 
@@ -106,7 +102,7 @@ function getSKYCODE($nomadlist){
          
     }
 
-    //print_r($skycode);
+    
     return $skycode;
 }
 
@@ -160,18 +156,17 @@ function CalculatePrice($Budget,$PollingURLWithCityCodes){
     $apikey = "?apiKey=prtl6749387986743898559646983194";
     $pollurl = "http://partners.api.skyscanner.net/apiservices/pricing/sg1/v1.0/bac9941a62dd48ac9b7d2d8a52998bbc_ecilpojl_EC1A4DBFD317BAC81DA0762C925A9B0A";
     $pollurl = $pollurl.$apikey;
-    //print_r($Budget);
+    
     $totalpushed = 0;
     $calculatedprice = array();
     for ($i=0;$i<sizeof($PollingURLWithCityCodes);$i++){
         $pollurl = $PollingURLWithCityCodes[$i]["PollingURL"]; 
         $pollurl = $pollurl.$apikey;
-        //print_r($pollurl);
-        //print_r($PollingURLWithCityCodes[$i]["nomadimageurl"]);
+        
         
 
         $response = Unirest\Request::get($pollurl);
-        //print_r($response->body->Itineraries[0]->PricingOptions[$i]->DeeplinkUrl);
+        
         $DeeplinkUrl = $response->body->Itineraries[0]->PricingOptions[$i]->DeeplinkUrl;
         $price = $response->body->Itineraries[0]->PricingOptions[0]->Price;
         $cityname = $PollingURLWithCityCodes[$i]["DestinationName"];
@@ -256,7 +251,12 @@ header('Content-type: application/json');
         $price = intval($pricecalculated[$i]["Price"]);
         $cityname = $pricecalculated[$i]["CityName"];
         if($cityname !=null && $price < intval($_GET["Budget"])){
-
+            if($pricecalculated[$i]["DeeplinkUrl"] != null){
+                $DeeplinkUrl = $pricecalculated[$i]["DeeplinkUrl"] ;
+            }else {
+                $DeeplinkUrl =  "https://skyscanner.com";
+            }
+            
             $data["messages"][0]["attachment"]["payload"]["elements"][$i] = array(
                     "title" => $pricecalculated[$i]["CityName"],
                     "image_url" => $pricecalculated[$i]["nomadimageurl"],
@@ -264,12 +264,12 @@ header('Content-type: application/json');
                     "buttons" => array(
                         array(
                             "type" => "web_url",
-                            "url" => $pricecalculated[$i]["DeeplinkUrl"],
+                            "url" => $DeeplinkUrl,
                             "title" => $price
                         ),
                         array(
                             "type" => "web_url",
-                            "url" => $pricecalculated[$i]["DeeplinkUrl"],
+                            "url" => $DeeplinkUrl,
                             "title" =>"Book Now"
                             )
                         )
